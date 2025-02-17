@@ -40,37 +40,38 @@
         </video>
       </div>
     </section>
-  
-    <section class="upload-section">
-      <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-        <div class="upload-wrapper">
-          <!-- Phần upload ảnh -->
-          <div class="upload-box" onclick="document.getElementById('file-input').click()">
-            <p>Click here or drag an image file</p>
-            <!-- Khi file được chọn, form sẽ tự động submit -->
-            <input type="file" id="file-input" name="uploadedFile" style="display: none;" accept="image/*" onchange="this.form.submit()" />
-          </div>
-      
-          <!-- Phần gợi ý ảnh mẫu -->
-          <div class="suggested-samples">
-            <p>You don't have any image? Don't worry, try these!</p>
-            <div class="sample-list">
-              <a href="{{ url_for('edit', filename='sample1.jpg') }}">
-                <img src="..\static\images\sample1.jpg" alt="Sample 1" />
-              </a>
-              <a href="{{ url_for('edit', filename='sample2.jpg') }}">
-                <img src="..\static\images\sample2.jpg" alt="Sample 2" />
-              </a>
-              <a href="{{ url_for('edit', filename='sample3.jpg') }}">
-                <img src="..\static\images\sample3.jpg" alt="Sample 3" />
-              </a>
+    <div class="upload-suggested">
+      <section class="upload-section">
+        <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+          <div class="upload-wrapper">
+            <!-- Phần upload ảnh -->
+            <div class="upload-box" onclick="document.getElementById('file-input').click()">
+              <p>Click here or drag an image file</p>
+              <!-- Khi file được chọn, form sẽ tự động submit -->
+              <input type="file" id="file-input" name="uploadedFile" style="display: none;" accept="image/*" onchange="this.form.submit()" />
             </div>
-            
+          </div>
+        </form>
+      </section>
+      
+      <section class="suggested-section">
+        <!-- Phần gợi ý ảnh mẫu -->
+        <div class="suggested-samples">
+          <p>You don't have any image? Don't worry, try these!</p>
+          <div class="sample-list">
+            <a href="{{ url_for('edit', filename='sample1.jpg') }}">
+              <img src="..\static\images\sample1.png" alt="Sample 1" />
+            </a>
+            <a href="{{ url_for('edit', filename='sample2.jpg') }}">
+              <img src="..\static\images\sample2.png" alt="Sample 2" />
+            </a>
+            <a href="{{ url_for('edit', filename='sample3.jpg') }}">
+              <img src="..\static\images\sample3.png" alt="Sample 3" />
+            </a>
           </div>
         </div>
-      </form>
-
-    </section>
+      </section>
+    </div>
   </main>
 </body>
 </html>
