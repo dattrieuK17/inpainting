@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Image</title>
+  <link rel="stylesheet" href="..\static\css\edit.css"> <!-- for go live -->
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Image Editor</div>
+      <ul>
+        <li><a href="/">Back</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="editor-container">
+      <canvas id="canvas"></canvas>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Load image from Flask variable
+    const img = new Image();
+    img.src = "{{ url_for('static', filename='uploads/' + filename) }}";
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+    };
+
+    // Brush settings
+    let painting = false;
+    function startPosition(e) { painting = true; draw(e); }
+    function endPosition() { painting = false; ctx.beginPath(); }
+    function draw(e) {
+      if (!painting) return;
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "red"; // Change brush color if needed
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    // Event listeners
+    canvas.addEventListener("mousedown", startPosition);
+    canvas.addEventListener("mouseup", endPosition);
+    canvas.addEventListener("mousemove", draw);
+  </script>
+</body>
+</html>

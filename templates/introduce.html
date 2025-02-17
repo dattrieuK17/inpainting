@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove Object</title>
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/introduce.css') }}"> //for flask -->
+  <link rel="stylesheet" href="..\static\css\introduce.css"> <!-- for go live -->
+  
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Object Removal</div>
+      <ul>
+        <li><a href="#">Github</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Remove Object</h1>
+        <p>
+          Remove any unwanted <span class="highlight">object</span>,
+          <span class="highlight">defect</span>, or
+          <span class="highlight">people</span> from your pictures in seconds.
+        </p>
+        <p class="sub-text">
+          Simply upload an image, and our AI-powered tool will do the rest.
+        </p>
+      </div>
+  
+      <!-- Video demo: không hiển thị controls -->
+      <div class="hero-media">
+        <video class="demo-video" autoplay muted loop playsinline>
+          <source src="..\static\demo_small.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+  
+    <section class="upload-section">
+      <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <div class="upload-wrapper">
+          <!-- Phần upload ảnh -->
+          <div class="upload-box" onclick="document.getElementById('file-input').click()">
+            <p>Click here or drag an image file</p>
+            <!-- Khi file được chọn, form sẽ tự động submit -->
+            <input type="file" id="file-input" name="uploadedFile" style="display: none;" accept="image/*" onchange="this.form.submit()" />
+          </div>
+      
+          <!-- Phần gợi ý ảnh mẫu -->
+          <div class="suggested-samples">
+            <p>You don't have any image? Don't worry, try these!</p>
+            <div class="sample-list">
+              <a href="{{ url_for('edit', filename='sample1.jpg') }}">
+                <img src="..\static\images\sample1.jpg" alt="Sample 1" />
+              </a>
+              <a href="{{ url_for('edit', filename='sample2.jpg') }}">
+                <img src="..\static\images\sample2.jpg" alt="Sample 2" />
+              </a>
+              <a href="{{ url_for('edit', filename='sample3.jpg') }}">
+                <img src="..\static\images\sample3.jpg" alt="Sample 3" />
+              </a>
+            </div>
+            
+          </div>
+        </div>
+      </form>
+
+    </section>
+  </main>
+</body>
+</html>

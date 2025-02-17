@@ -1,0 +1,172 @@
+/* Đặt lại margin, padding mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  /* Header và Navbar */
+  header {
+    background-color: #fff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  nav .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  nav ul li a:hover {
+    color: #007bff;
+  }
+  
+  /* Hero section */
+  .hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .hero-text {
+    flex: 1;
+    margin-right: 2rem;
+  }
+  
+  .hero-text h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-text p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Tô màu highlight cho vài từ khóa */
+  .highlight {
+    background-color: #ffe700;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+  }
+  
+  .sub-text {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #666;
+  }
+  
+  /* Hero media (video) */
+  .hero-media {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  /* Bo góc cho video */
+  .demo-video {
+    width: 275px;         /* Kích thước mong muốn */
+    height: 250px;        /* Cố tình set chiều cao để tạo khung */
+    object-fit: cover;    /* cover: phóng to video, cắt phần dư, không còn viền đen */
+    border-radius: 12px;  /* bo góc */
+    background-color: #fff; /* đề phòng video rỗng, hiển thị nền trắng */
+}
+
+  
+  /* Upload section */
+  .upload-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    text-align: center;
+  }
+  
+  .upload-box {
+    border: 2px dashed #007bff;
+    padding: 2rem;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: 0.3s;
+  }
+  
+  .upload-box p {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .upload-box:hover {
+    background-color: #e9f5ff;
+  }
+  
+  /* Các style bổ sung cho phần upload và gợi ý ảnh */
+  .upload-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+
+  .upload-box {
+    flex: 1;
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .suggested-samples {
+    flex: 1;
+  }
+
+  .suggested-samples p {
+    margin: 0 0 10px;
+    font-weight: bold;
+  }
+
+  .sample-list {
+    display: flex;
+    gap: 10px;
+  }
+
+  .sample-list img {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.3s;
+  }
+
+  .sample-list img:hover {
+    border: 2px solid #333;
+  }
