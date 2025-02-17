@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from werkzeug.utils import secure_filename
 import os
 from PIL import Image
@@ -59,6 +59,20 @@ def edit():
 
     # Trang chỉnh sửa sử dụng file đã upload
     return render_template('edit.html', filename=filename)
+
+
+@app.route("/save-mask/<filename>", methods=["POST"])
+def save_mask(filename):
+    if "mask" not in request.files:
+        return jsonify({"error": "No mask uploaded"}), 400
+    
+    mask = request.files["mask"]
+    mask_filename = f"mask-{filename}"
+    mask_path = os.path.join(app.config["UPLOAD_FOLDER"], mask_filename)
+
+    mask.save(mask_path)
+    return jsonify({"message": f"Mask saved as {mask_filename}"}), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)
