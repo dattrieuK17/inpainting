@@ -1,14 +1,26 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+  * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
-  
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+
+  /* Header và Navbar */
   header {
     background-color: #fff;
     padding: 1rem 2rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   nav .logo {
@@ -16,7 +28,8 @@ body {
     font-weight: bold;
   }
   .editor-container {
-    display: flex;
+    position: relative;
+    display: inline-block;
     justify-content: center;
     align-items: center;
     height: 80vh;
@@ -26,4 +39,25 @@ body {
     border: 2px solid black;
     cursor: crosshair;
   }
+
+  /* imageCanvas dùng để hiển thị ảnh nền */
+  #imageCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid black;
+    display: block;
+  }
+
+  /* maskCanvas nằm chồng lên imageCanvas */
+  #maskCanvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 1px solid transparent; /* để tránh ảnh hưởng */
+    /* pointer-events cho phép nhận sự kiện vẽ */
+    cursor: crosshair;
+  }
+
+  .controls { margin-top: 10px; }
   

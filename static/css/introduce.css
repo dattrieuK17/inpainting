@@ -62,12 +62,12 @@
   }
   
   .hero-text h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin-bottom: 1rem;
   }
   
   .hero-text p {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     line-height: 1.6;
     margin-bottom: 0.5rem;
   }
@@ -95,19 +95,32 @@
   
   /* Bo góc cho video */
   .demo-video {
-    width: 275px;         /* Kích thước mong muốn */
-    height: 250px;        /* Cố tình set chiều cao để tạo khung */
-    object-fit: cover;    /* cover: phóng to video, cắt phần dư, không còn viền đen */
-    border-radius: 12px;  /* bo góc */
-    background-color: #fff; /* đề phòng video rỗng, hiển thị nền trắng */
-}
+    height: 250px;       /* Cố định chiều cao */
+    width: auto;         /* Tự động scale chiều rộng theo tỉ lệ gốc */
+    border-radius: 15px; /* Bo góc */
+    background-color: #fff; /* Đề phòng khi video rỗng */
+  }
 
   
+  .upload-suggested{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
   /* Upload section */
   .upload-section {
-    max-width: 800px;
-    margin: 2rem auto;
-    text-align: center;
+    flex: 1;
+    margin-right: 2rem;
+  }
+
+  .suggested-section{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
   }
   
   .upload-box {
@@ -147,23 +160,29 @@
 
   .suggested-samples {
     flex: 1;
+    align-items: center;
+    text-align: center;
   }
 
   .suggested-samples p {
     margin: 0 0 10px;
     font-weight: bold;
+    justify-items: center;
   }
 
   .sample-list {
     display: flex;
     gap: 10px;
+    align-items: center;
+    justify-content: center;
   }
 
   .sample-list img {
-    width: 100px;
+    width: 120px;
     height: auto;
     cursor: pointer;
-    border: 2px solid transparent;
+    border: 5px solid transparent;
+    border-radius: 15px;
     transition: border 0.3s;
   }
 
