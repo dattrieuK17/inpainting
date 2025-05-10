@@ -3,45 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edit Image</title>
+  <meta name="description" content="Edit and remove objects from your images using AI-powered technology">
+  <title>Edit Image | AI Object Removal</title>
   <link rel="stylesheet" href="../static/css/edit.css" />
-  <style>
-    .editor-container {
-      position: relative;
-      display: inline-block;
-    }
-    #imageCanvas, #maskCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <header>
     <nav>
-      <div class="logo">Image Editor</div>
+      <div class="logo">
+        <i class="fas fa-magic"></i>
+        Image Editor
+      </div>
       <ul>
-        <li><a href="/">Back</a></li>
+        <li><a href="/"><i class="fas fa-arrow-left"></i> Back</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
+  <main class="main-container">
     <div class="editor-container">
       <canvas id="imageCanvas"></canvas>
       <canvas id="maskCanvas"></canvas>
     </div>
+
     <div class="controls">
-      <label for="brushSize">Brush Size:</label>
-      <input type="range" id="brushSize" min="5" max="50" value="15" onchange="updateBrushSize(this.value)" />
-      <button onclick="toggleEraser()" id="eraserButton">Eraser</button>
-      <button onclick="saveMask()">Save Mask</button>
+      <div class="brush-control">
+        <label for="brushSize">
+          <i class="fas fa-paint-brush"></i>
+        </label>
+        <input type="range" id="brushSize" min="5" max="50" value="15" onchange="updateBrushSize(this.value)" />
+      </div>
+      
+      <button onclick="toggleEraser()" id="eraserButton" class="tool-button">
+        <i class="fas fa-eraser"></i>
+        Eraser
+      </button>
+      
+      <button onclick="saveMask()" class="tool-button">
+        <i class="fas fa-save"></i>
+        Save Mask
+      </button>
+      <button onclick="applyInpainting()" class="tool-button">
+        <i class="fas fa-magic"></i>
+        Apply Inpainting
+      </button>
+      <button onclick="resetImage()" class="tool-button">
+        <i class="fas fa-undo"></i>
+        Reset
+      </button>
+    </div>
+
+    <div class="result-container">
+      <h3><i class="fas fa-image"></i> Inpainted Result</h3>
+      <img id="inpaintedImage" alt="Inpainted Image" />
     </div>
   </main>
+
   <script>
-    const filename = "{{ filename }}";
+    // Pass the filename from Flask template to JavaScript
+    window.initialFilename = "{{ filename }}";
   </script>
+
   <script src="../static/js/edit.js"></script>
 </body>
 </html>
