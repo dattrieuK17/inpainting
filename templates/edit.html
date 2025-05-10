@@ -30,6 +30,15 @@
       <canvas id="maskCanvas"></canvas>
     </div>
 
+    <div class="backward_forward">
+      <button id="undoButton" class="undo-button" onclick="undo()">
+        <i class="fas fa-undo"></i>
+      </button>
+      <button id="redoButton" class="redo-button" onclick="redo()">
+        <i class="fas fa-redo"></i>
+      </button>
+    </div>
+    
     <div class="controls">
       <div class="brush-control">
         <label for="brushSize">
@@ -55,11 +64,6 @@
         <i class="fas fa-undo"></i>
         Reset
       </button>
-    </div>
-
-    <div class="result-container">
-      <h3><i class="fas fa-image"></i> Inpainted Result</h3>
-      <img id="inpaintedImage" alt="Inpainted Image" />
     </div>
   </main>
 
