@@ -7,25 +7,36 @@ let painting = false;
 let brushSize = 15;
 let isEraser = false;
 let lastX, lastY;
+let originalImage = null;
+let currentFilename = window.initialFilename; // Get filename from global variable
 
-const img = new Image();
-img.src = `/static/uploads/${filename}`;
-img.onload = function () {
-    const size = getResizedSize(img.width, img.height);
+if (!currentFilename) {
+    console.error("No filename provided!");
+    window.location.href = "/";
+}
 
-    imageCanvas.width = size.width;
-    imageCanvas.height = size.height;
-    maskCanvas.width = size.width;
-    maskCanvas.height = size.height;
+// Load and display the image
+function loadImage(imgSrc) {
+    const img = new Image();
+    img.onload = function () {
+        const size = {width: img.width, height: img.height};
 
-    imageCtx.drawImage(img, 0, 0, size.width, size.height);
-};
+        imageCanvas.width = size.width;
+        imageCanvas.height = size.height;
+        maskCanvas.width = size.width;
+        maskCanvas.height = size.height;
 
-function getResizedSize(width, height) {
-    const maxSize = 512;
-    if (width <= maxSize && height <= maxSize) return { width, height };
-    const scale = maxSize / Math.max(width, height);
-    return { width: Math.round(width * scale), height: Math.round(height * scale) };
+        imageCtx.drawImage(img, 0, 0, size.width, size.height);
+        originalImage = img; // Store original image for reset
+    };
+    img.src = imgSrc;
+}
+
+// Reset to original image
+function resetImage() {
+    currentFilename = window.initialFilename; // Reset to original filename
+    loadImage(`/static/uploads/${currentFilename}`);
+    maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
 }
 
 function updateBrushSize(size) {
@@ -34,7 +45,13 @@ function updateBrushSize(size) {
 
 function toggleEraser() {
     isEraser = !isEraser;
-    document.getElementById("eraserButton").textContent = isEraser ? "Brush" : "Eraser";
+    const eraserButton = document.getElementById("eraserButton");
+
+    if (isEraser) {
+        eraserButton.classList.add("active");
+    } else {
+        eraserButton.classList.remove("active");
+    }
 }
 
 maskCanvas.addEventListener("mousedown", startDraw);
@@ -76,25 +93,87 @@ function stopDraw() {
 }
 
 function saveMask() {
-    const tempCanvas = document.createElement("canvas");
-    tempCanvas.width = maskCanvas.width;
-    tempCanvas.height = maskCanvas.height;
-    const tempCtx = tempCanvas.getContext("2d");
+    return new Promise((resolve, reject) => {
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = maskCanvas.width;
+        tempCanvas.height = maskCanvas.height;
+        const tempCtx = tempCanvas.getContext("2d");
 
-    tempCtx.fillStyle = "black";
-    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-    tempCtx.drawImage(maskCanvas, 0, 0);
+        tempCtx.fillStyle = "black";
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        tempCtx.drawImage(maskCanvas, 0, 0);
 
-    tempCanvas.toBlob((blob) => {
-        const formData = new FormData();
-        formData.append("mask", blob, `mask-${filename}`);
+        tempCanvas.toBlob((blob) => {
+            const formData = new FormData();
+            // Always use the original filename for the mask
+            formData.append("mask", blob, `mask-${window.initialFilename}`);
 
-        fetch(`/save-mask/${filename}`, {  // Dùng filename từ biến toàn cục
-            method: "POST",
-            body: formData
+            fetch(`/save-mask/${window.initialFilename}`, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                resolve();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                reject(error);
+            });
+        }, "image/png");
+    });
+}
+
+function applyInpainting() {
+    // Get the base filename without any "inpainted-" prefix
+    const baseFilename = currentFilename; 
+    
+    // Save mask first and wait for it to complete
+    saveMask()
+        .then(() => {
+            // Only proceed with inpainting after mask is saved
+            return fetch(`/inpaint/${baseFilename}`, {
+                method: "POST"
+            });
         })
         .then(response => response.json())
-        .then(data => alert(data.message))
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.error);
+                return;
+            }
+            
+            // Update the original image with the inpainted result
+            const img = new Image();
+            img.onload = function() {
+                // Update canvas dimensions if needed
+                if (img.width !== imageCanvas.width || img.height !== imageCanvas.height) {
+                    imageCanvas.width = img.width;
+                    imageCanvas.height = img.height;
+                    maskCanvas.width = img.width;
+                    maskCanvas.height = img.height;
+                }
+
+                // Draw the inpainted result on the image canvas
+                imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+                imageCtx.drawImage(img, 0, 0);
+                
+                // Clear the mask canvas for new drawing
+                maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+                
+                // Update the original image reference
+                originalImage = img;
+                
+                // Update the current filename to the inpainted result
+                currentFilename = data.result;
+            };
+            img.src = `/static/uploads/${data.result}`;
+        })
         .catch(error => console.error("Error:", error));
-    }, "image/png");
 }
+
+// Load initial image
+loadImage(`/static/uploads/${currentFilename}`);
+
+
