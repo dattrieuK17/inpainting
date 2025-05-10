@@ -1,191 +1,239 @@
-/* Đặt lại margin, padding mặc định */
+/* Reset and base styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-  }
-  
-  /* Header và Navbar */
-  header {
-    background-color: #fff;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  }
-  
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  nav .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-  }
-  
-  nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.2s ease-in-out;
-  }
-  
-  nav ul li a:hover {
-    color: #007bff;
-  }
-  
-  /* Hero section */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* Header and Navbar */
+header {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 1.2rem 2rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+nav .logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+}
+
+/* Hero section */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.hero-text h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #1e293b, #475569);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  color: #475569;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #fef08a, #fde047);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.sub-text {
+  margin-top: 1.5rem;
+  font-style: italic;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* Hero media (video) */
+.hero-media {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.demo-video {
+  height: 300px;
+  width: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.demo-video:hover {
+  transform: translateY(-5px);
+}
+
+/* Upload and suggested section */
+.upload-suggested {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 3rem;
+}
+
+.upload-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.upload-box {
+  border: 2px dashed #3b82f6;
+  padding: 2.5rem;
+  cursor: pointer;
+  border-radius: 16px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.upload-box p {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.upload-box:hover {
+  background-color: #eff6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.suggested-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.suggested-samples {
+  text-align: center;
+}
+
+.suggested-samples p {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #475569;
+  font-size: 1.1rem;
+}
+
+.sample-list {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sample-list img {
+  width: 150px;
+  height: auto;
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sample-list img:hover {
+  border-color: #3b82f6;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   .hero {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 2rem 1rem;
   }
-  
-  .hero-text {
-    flex: 1;
-    margin-right: 2rem;
-  }
-  
+
   .hero-text h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
   }
-  
+
   .hero-text p {
-    font-size: 1.5rem;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
   }
-  
-  /* Tô màu highlight cho vài từ khóa */
-  .highlight {
-    background-color: #ffe700;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-  }
-  
-  .sub-text {
-    margin-top: 1rem;
-    font-style: italic;
-    color: #666;
-  }
-  
-  /* Hero media (video) */
-  .hero-media {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-  
-  /* Bo góc cho video */
+
   .demo-video {
-    height: 250px;       /* Cố định chiều cao */
-    width: auto;         /* Tự động scale chiều rộng theo tỉ lệ gốc */
-    border-radius: 15px; /* Bo góc */
-    background-color: #fff; /* Đề phòng khi video rỗng */
+    height: 250px;
   }
 
-  
-  .upload-suggested{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+  .upload-suggested {
+    padding: 2rem 1rem;
+    gap: 2rem;
   }
-  /* Upload section */
-  .upload-section {
-    flex: 1;
-    margin-right: 2rem;
-  }
-
-  .suggested-section{
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-  
-  .upload-box {
-    border: 2px dashed #007bff;
-    padding: 2rem;
-    cursor: pointer;
-    border-radius: 10px;
-    background-color: #fff;
-    transition: 0.3s;
-  }
-  
-  .upload-box p {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #555;
-  }
-  
-  .upload-box:hover {
-    background-color: #e9f5ff;
-  }
-  
-  /* Các style bổ sung cho phần upload và gợi ý ảnh */
-  .upload-wrapper {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    margin-top: 20px;
-  }
-
-  .upload-box {
-    flex: 1;
-    border: 2px dashed #ccc;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .suggested-samples {
-    flex: 1;
-    align-items: center;
-    text-align: center;
-  }
-
-  .suggested-samples p {
-    margin: 0 0 10px;
-    font-weight: bold;
-    justify-items: center;
-  }
-
-  .sample-list {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sample-list img {
-    width: 120px;
-    height: auto;
-    cursor: pointer;
-    border: 5px solid transparent;
-    border-radius: 15px;
-    transition: border 0.3s;
-  }
-
-  .sample-list img:hover {
-    border: 2px solid #333;
-  }
+}
