@@ -3,17 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Remove Object</title>
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/introduce.css') }}"> //for flask -->
-  <link rel="stylesheet" href="..\static\css\introduce.css"> <!-- for go live -->
-  
+  <meta name="description" content="Remove unwanted objects, defects, or people from your pictures using AI-powered technology">
+  <meta name="keywords" content="image editing, object removal, AI, photo editor, image processing">
+  <title>AI Object Removal | Remove Unwanted Elements from Images</title>
+  <link rel="stylesheet" href="..\static\css\introduce.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <header>
     <nav>
-      <div class="logo">Object Removal</div>
+      <div class="logo">
+        <i class="fas fa-magic"></i>
+        Object Removal
+      </div>
       <ul>
-        <li><a href="#">Github</a></li>
+        <li><a href="https://github.com/yourusername/object-removal" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-github"></i> Github
+        </a></li>
       </ul>
     </nav>
   </header>
@@ -21,18 +30,17 @@
   <main>
     <section class="hero">
       <div class="hero-text">
-        <h1>Remove Object</h1>
+        <h1>Remove Objects with AI Magic</h1>
         <p>
           Remove any unwanted <span class="highlight">object</span>,
           <span class="highlight">defect</span>, or
           <span class="highlight">people</span> from your pictures in seconds.
         </p>
         <p class="sub-text">
-          Simply upload an image, and our AI-powered tool will do the rest.
+          Powered by advanced AI technology to seamlessly remove elements while preserving image quality
         </p>
       </div>
   
-      <!-- Video demo: không hiển thị controls -->
       <div class="hero-media">
         <video class="demo-video" autoplay muted loop playsinline>
           <source src="..\static\demo_small.mp4" type="video/mp4" />
@@ -40,14 +48,15 @@
         </video>
       </div>
     </section>
+
     <div class="upload-suggested">
       <section class="upload-section">
         <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
           <div class="upload-wrapper">
-            <!-- Phần upload ảnh -->
             <div class="upload-box" onclick="document.getElementById('file-input').click()">
+              <i class="fas fa-cloud-upload-alt fa-3x"></i>
               <p>Click here or drag an image file</p>
-              <!-- Khi file được chọn, form sẽ tự động submit -->
+              <p class="upload-hint">Supported formats: JPG, PNG, WEBP</p>
               <input type="file" id="file-input" name="uploadedFile" style="display: none;" accept="image/*" onchange="this.form.submit()" />
             </div>
           </div>
@@ -55,23 +64,26 @@
       </section>
       
       <section class="suggested-section">
-        <!-- Phần gợi ý ảnh mẫu -->
         <div class="suggested-samples">
-          <p>You don't have any image? Don't worry, try these!</p>
+          <p>Don't have an image? Try these examples!</p>
           <div class="sample-list">
-            <a href="{{ url_for('edit', filename='sample1.jpg') }}">
-              <img src="..\static\images\sample1.png" alt="Sample 1" />
+            <a href="{{ url_for('edit', filename='sample1.jpg') }}" class="sample-item">
+              <img src="..\static\images\sample1.png" alt="Sample 1 - Remove object from image" />
+              <span class="sample-label">Remove Object</span>
             </a>
-            <a href="{{ url_for('edit', filename='sample2.jpg') }}">
-              <img src="..\static\images\sample2.png" alt="Sample 2" />
+            <a href="{{ url_for('edit', filename='sample2.jpg') }}" class="sample-item">
+              <img src="..\static\images\sample2.png" alt="Sample 2 - Remove defect from image" />
+              <span class="sample-label">Remove Defect</span>
             </a>
-            <a href="{{ url_for('edit', filename='sample3.jpg') }}">
-              <img src="..\static\images\sample3.png" alt="Sample 3" />
+            <a href="{{ url_for('edit', filename='sample3.jpg') }}" class="sample-item">
+              <img src="..\static\images\sample3.png" alt="Sample 3 - Remove person from image" />
+              <span class="sample-label">Remove Person</span>
             </a>
           </div>
         </div>
       </section>
     </div>
   </main>
+  <script src="../static/js/introduce.js"></script>
 </body>
 </html>
