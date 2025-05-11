@@ -2,36 +2,45 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from werkzeug.utils import secure_filename
 import os
 from PIL import Image
-import cv2
+import re
 from omegaconf import OmegaConf
 import yaml
 import torch
 import numpy as np
+import shutil
 import sys 
 sys.path.append(os.path.abspath("lama"))
-
 from lama.saicinpainting.evaluation.utils import move_to_device
 from lama.saicinpainting.training.trainers import load_checkpoint
+
 app = Flask(__name__)
 
+MIN_SIZE = 1024
 # Cấu hình thư mục lưu trữ file upload
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+app.config['INPAINTED_FOLDER'] = 'static/inpainted'
+if os.path.exists(app.config['INPAINTED_FOLDER']):
+    shutil.rmtree(app.config['INPAINTED_FOLDER'])
+os.makedirs(app.config['INPAINTED_FOLDER'], exist_ok=True)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Hàm resize ảnh trước khi lưu
 def resize_image(file):
     img = Image.open(file)
     width, height = img.size
 
-    # Nếu một trong hai chiều nhỏ hơn 512px, giữ nguyên
-    if width < 512 or height < 512:
+    # Nếu một trong hai chiều nhỏ hơn MIN_SIZE, giữ nguyên
+    if width < MIN_SIZE or height < MIN_SIZE:
         return img  
 
     # Lấy giá trị nhỏ nhất giữa width và height
     min_dim = min(width, height)
 
-    # Resize về 512px nhưng giữ nguyên tỉ lệ
-    scale_factor = 512 / min_dim
+    # Resize về MIN_SIZEpx nhưng giữ nguyên tỉ lệ
+    scale_factor = MIN_SIZE / min_dim
     new_width = int(width * scale_factor)
     new_height = int(height * scale_factor)
 
@@ -43,17 +52,18 @@ def resize_image(file):
     return img
 
 def load_model():
-    model_path = "big-lama"  # Đường dẫn thư mục chứa model
+    model_path = "lama/LaMa_models/big-lama"  # Đường dẫn thư mục chứa model
     checkpoint = "models/best.ckpt"
     train_config_path = os.path.join(model_path, 'config.yaml')
     checkpoint_path = os.path.join(model_path, checkpoint)
-    
+
     with open(train_config_path, 'r') as f:
         train_config = OmegaConf.create(yaml.safe_load(f))
     train_config.training_model.predict_only = True
     train_config.visualizer.kind = 'noop'
-    
-    model = load_checkpoint(train_config, checkpoint_path, strict=False, map_location='cpu')
+
+    model = load_checkpoint(train_config, checkpoint_path, strict=False, map_location=device)
+    model.to(device)
     model.freeze()
     return model
 
@@ -120,42 +130,54 @@ def edit():
     except Exception as e:
         print(f"Error in edit route: {str(e)}")
         return redirect(url_for('index'))
-
-
-@app.route("/save-mask/<filename>", methods=["POST"])
-def save_mask(filename):
-    if "mask" not in request.files:
-        return jsonify({"error": "No mask uploaded"}), 400
     
-    mask = request.files["mask"]
-    mask_filename = f"mask-{filename}"
-    mask_path = os.path.join(app.config["UPLOAD_FOLDER"], mask_filename)
+@app.route("/reset/<filename>", methods=["POST"])
+def reset(filename):
+    try:
+        filename_wo_ext = os.path.splitext(filename)[0]
+        match = re.search(r"(?:inpainted-)*(.+?)(?:_\d+)?$", filename_wo_ext)
+        base_name = match.group(1) if match else filename_wo_ext
 
-    mask.save(mask_path)
-    return jsonify({"message": f"Mask saved as {mask_filename}"}), 200
+        folder = app.config['INPAINTED_FOLDER']
+        deleted_files = []
+
+        for f in os.listdir(folder):
+            if re.fullmatch(rf"inpainted-{re.escape(base_name)}_\d+\.jpg", f):
+                os.remove(os.path.join(folder, f))
+                deleted_files.append(f)
+
+        print(f"Reset: đã xoá {len(deleted_files)} file inpainted cho {base_name}")
+        return jsonify({"message": "Reset completed", "deleted": deleted_files}), 200
+
+    except Exception as e:
+        print(f"Lỗi khi reset: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route("/inpaint/<filename>", methods=["POST"])
 def inpaint(filename):
     try:
-        # Đọc ảnh gốc và mask từ thư mục lưu trữ
-        image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        mask_path = os.path.join(app.config["UPLOAD_FOLDER"], f"mask-{filename}")
+        if "mask" not in request.files:
+            return jsonify({"error": "Mask not uploaded"}), 400
 
-        if not os.path.exists(image_path) or not os.path.exists(mask_path):
-            return jsonify({"error": "Image or mask not found"}), 400
+        # Đọc ảnh gốc từ ổ đĩa
+        if filename.startswith("inpainted-"):
+            image_path = os.path.join(app.config['INPAINTED_FOLDER'], filename)
+        else:
+            image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        if not os.path.exists(image_path):
+            return jsonify({"error": "Original image not found"}), 400
 
-        # Read image and mask using PIL
+        # Đọc ảnh từ file
         image = Image.open(image_path).convert('RGB')
-        mask = Image.open(mask_path).convert('L')  # Convert to grayscale
+        mask_file = request.files["mask"]
+        mask = Image.open(mask_file).convert('L')
 
-        # Convert PIL images to numpy arrays
+        
         image_np = np.array(image)
         mask_np = np.array(mask)
-
-        # Ensure mask is binary (0 or 255)
         mask_np = (mask_np > 128).astype(np.uint8) * 255
 
-        # Pad image and mask to be divisible by 8
         h, w = image_np.shape[:2]
         pad_h = (8 - h % 8) % 8
         pad_w = (8 - w % 8) % 8
@@ -163,38 +185,46 @@ def inpaint(filename):
             image_np = np.pad(image_np, ((0, pad_h), (0, pad_w), (0, 0)), mode='constant')
             mask_np = np.pad(mask_np, ((0, pad_h), (0, pad_w)), mode='constant')
 
-        # Convert to tensor
         image_tensor = torch.from_numpy(image_np.transpose(2, 0, 1)).float() / 255.0
         mask_tensor = torch.from_numpy(mask_np).float().unsqueeze(0) / 255.0
-        mask_tensor = (mask_tensor > 0).float()  # Convert to binary
+        mask_tensor = (mask_tensor > 0).float()
 
-        # Move tensors to model
         batch = {"image": image_tensor.unsqueeze(0), "mask": mask_tensor.unsqueeze(0)}
-        batch = move_to_device(batch, "cpu")
-
-        # Generate result
+        batch = move_to_device(batch, device)
+        print(f"Processing on: {device}")
+        
         with torch.no_grad():
             batch = model(batch)
             result = batch["inpainted"][0].permute(1, 2, 0).cpu().numpy()
 
-        # Remove padding from result
         if pad_h > 0 or pad_w > 0:
             result = result[:h, :w]
 
-        # Convert result back to PIL Image
         result = np.clip(result * 255, 0, 255).astype('uint8')
         result_image = Image.fromarray(result)
 
-        # Save result
-        result_filename = f"inpainted-{filename}"
-        result_path = os.path.join(app.config["UPLOAD_FOLDER"], result_filename)
+        # Đếm số file inpainted hiện có để xác định i
+        filename_wo_ext = os.path.splitext(filename)[0]
+        match = re.search(r"(?:inpainted-)*(.+?)(?:_\d+)?$", filename_wo_ext)
+        base_name = match.group(1) if match else filename_wo_ext
+
+        pattern = re.compile(rf"inpainted-{re.escape(base_name)}_(\d+)\.jpg")
+        existing = [f for f in os.listdir(app.config['INPAINTED_FOLDER']) if pattern.match(f)]
+        existing_indices = [int(pattern.match(f).group(1)) for f in existing]
+        next_i = max(existing_indices, default=0) + 1
+
+        result_filename = f"inpainted-{base_name}_{next_i}.jpg"
+        result_path = os.path.join(app.config['INPAINTED_FOLDER'], result_filename)
         result_image.save(result_path, quality=95)
 
-        print(f"Inpainting hoàn thành! Ảnh lưu tại: {result_path}")
+        return jsonify({
+            "message": "Inpainting completed",
+            "result": result_filename,
+            "i": next_i
+        }), 200
 
-        return jsonify({"message": "Inpainting completed", "result": result_filename}), 200
     except Exception as e:
-        print(f"Error during inpainting: {str(e)}")  # Add error logging
+        print(f"Error during inpainting: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 
