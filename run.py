@@ -52,7 +52,7 @@ def resize_image(file):
     return img
 
 def load_model():
-    model_path = "lama/LaMa_models/big-lama"  # Đường dẫn thư mục chứa model
+    model_path = "LaMa_models/big-lama"  # Đường dẫn thư mục chứa model
     checkpoint = "models/best.ckpt"
     train_config_path = os.path.join(model_path, 'config.yaml')
     checkpoint_path = os.path.join(model_path, checkpoint)
