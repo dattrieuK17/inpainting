@@ -1,4 +1,24 @@
-/* Header and Navbar */ 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; 
+  overflow: hidden; /* Ngăn cuộn */
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* Header and Navbar */
 header {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 1.2rem 2rem;
@@ -23,9 +43,6 @@ nav .logo {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 nav ul {
@@ -39,13 +56,22 @@ nav ul li a {
   color: #475569;
   font-weight: 500;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  position: relative;
 }
 
-nav ul li a:hover {
-  color: #3b82f6;
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
 }
 
 .main-container {
@@ -60,8 +86,7 @@ nav ul li a:hover {
 .editor-container {
   position: relative;
   display: inline-block;
-  background: #fff;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  
 }
 
@@ -98,18 +123,6 @@ nav ul li a:hover {
   cursor: not-allowed;
 }
 
-.controls {
-  display: flex;
-  position: relative;    /* establish a new stacking context */       /* above the maskCanvas’s z-index */
-  justify-content: space-between;
-  width: 800px;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-
 canvas {
   border-radius: 12px;  
   cursor: crosshair;
@@ -122,7 +135,7 @@ canvas {
   border-radius: 12px;
 }
 
-imageCanvas {
+#imageCanvas {
   position: relative;
   z-index: 0;
 }
@@ -130,6 +143,60 @@ imageCanvas {
 #maskCanvas {
   position: absolute;
   z-index: 1;
+}
+
+.controls {
+  display: flex;
+  position: relative;    /* establish a new stacking context */       /* above the maskCanvas’s z-index */
+  justify-content: space-between;
+  gap: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tool-button {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #475569;
+}
+
+.tool-button:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  color: #3b82f6;
+}
+
+.tool-button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.brush-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f8fafc;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.brush-control i {
+  color: #3b82f6;
+  font-size: 1.2rem;
 }
 
 #brushSize {
@@ -178,45 +245,3 @@ imageCanvas {
   transform: scale(1.1);
 }
 
-.tool-button {
-  background: #fff;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.75rem 1.25rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  color: #475569;
-}
-
-.tool-button:hover {
-  background: #f8fafc;
-  border-color: #3b82f6;
-  transform: translateY(-2px);
-  color: #3b82f6;
-}
-
-.tool-button.active {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
-}
-
-.brush-control {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: #f8fafc;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  border: 2px solid #e2e8f0;
-}
-
-.brush-control i {
-  color: #3b82f6;
-  font-size: 1.2rem;
-}
