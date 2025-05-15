@@ -14,10 +14,12 @@ This repository provides a web-based **image inpainting tool** built with **Flas
 
 ---
 
-## Demo
+## ✨ Demo
 ![Introduce](static/demo_images/introduce.png)
 
 ![Edit](static/demo_images/edit.png)
+
+---
 
 ## 🔍 Model Used
 
