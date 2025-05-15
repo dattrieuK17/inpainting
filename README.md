@@ -14,6 +14,11 @@ This repository provides a web-based **image inpainting tool** built with **Flas
 
 ---
 
+## Demo
+![Introduce](static/demo_images/introduce.png)
+
+![Edit](static/demo_images/edit.png)
+
 ## 🔍 Model Used
 
 This project uses the **LaMa** model, proposed in:
@@ -60,5 +65,5 @@ inpainting/
 python run.py
 ```
 
-4. **Access**
+4. **Access:**
     Open your browser and access to `localhost:5000`
