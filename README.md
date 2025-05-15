@@ -1,4 +1,4 @@
-# Inpainting Web App with LaMa Model
+# 🎨 Inpainting Web App with LaMa Model
 
 This repository provides a web-based **image inpainting tool** built with **Flask**, allowing users to upload an image, draw masks on it, and apply an AI-based inpainting model to intelligently fill in the masked regions.
 
